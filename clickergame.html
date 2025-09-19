@@ -1,0 +1,1276 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Click-Upgrades — Canvas (Polished & No Oval)</title>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --card: #28262E;
+      --card-2: #34323A;
+      --bg-end: #3B2A2D;
+      --accent: #FF885A;
+      --accent-2: #E8683C;
+      --muted: #A19A8B;
+      --glass: rgba(255, 136, 90, 0.04);
+      --glass-2: rgba(255, 136, 90, 0.02);
+      --glass-3: rgba(255, 136, 90, 0.01);
+      --radius: 14px;
+      font-family: Inter, Roboto, system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial;
+      color: #e6eef6;
+    }
+
+    html,
+    body {
+      margin: 0;
+      background:
+        radial-gradient(400px 400px at 10% 90%, rgba(255, 165, 0, 0.04), transparent 80%),
+        radial-gradient(600px 600px at 90% 10%, rgba(16, 185, 129, 0.05), transparent 80%),
+        radial-gradient(800px 800px at 25% 25%, rgba(13, 110, 253, 0.03), transparent 75%),
+        radial-gradient(1000px 1000px at 75% 75%, rgba(29, 78, 216, 0.02), transparent 75%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-end) 100%);
+
+    }
+
+    .wrap {
+      max-width: 1120px;
+      margin: 28px auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 18px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, var(--card), var(--card-2));
+      padding: 16px;
+      border-radius: var(--radius);
+      box-shadow: 0 10px 40px rgba(2, 6, 23, 0.7);
+      transform: translateZ(0);
+      border: 1px solid rgba(255, 255, 255, 0.02)
+    }
+
+    header {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 18px;
+      margin: 0;
+      display: flex;
+      gap: 12px;
+      align-items: center
+    }
+
+    .header-emoji {
+      display: inline-block;
+      animation: headerBounce 2200ms ease-in-out infinite
+    }
+
+    @keyframes headerBounce {
+      0% {
+        transform: translateY(0)
+      }
+
+      40% {
+        transform: translateY(-6px)
+      }
+
+      80% {
+        transform: translateY(0)
+      }
+
+      100% {
+        transform: translateY(0)
+      }
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    #mainCanvasWrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+      position: relative;
+      overflow: visible
+    }
+
+    canvas#clickCanvas {
+      width: 520px;
+      height: 400px;
+      border-radius: 16px;
+      display: block;
+      box-shadow: 0 20px 60px rgba(2, 6, 23, 0.75);
+      background: transparent
+    }
+
+    #stats {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap
+    }
+
+    .stat {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+      padding: 10px;
+      border-radius: 10px;
+      min-width: 140px;
+      text-align: center;
+      backdrop-filter: blur(6px);
+      transition: transform .22s cubic-bezier(.2, .9, .2, 1), box-shadow .22s
+    }
+
+    .stat:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 36px rgba(2, 6, 23, 0.45)
+    }
+
+    .stat .big {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      transition: all .22s linear
+    }
+
+    .stat.pulse {
+      animation: statPulse .6s ease;
+    }
+
+    @keyframes statPulse {
+      0% {
+        transform: scale(1)
+      }
+
+      50% {
+        transform: scale(1.06)
+      }
+
+      100% {
+        transform: scale(1)
+      }
+    }
+
+    .shop {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 6px
+    }
+
+    .itemRow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.012), rgba(0, 0, 0, 0.02));
+      transform-origin: left;
+      opacity: 0;
+      transform: translateX(-14px);
+      animation: rowIn .36s cubic-bezier(.2, .9, .2, 1) forwards
+    }
+
+    @keyframes rowIn {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .itemRow .meta {
+      display: flex;
+      gap: 12px;
+      align-items: center
+    }
+
+    .iconWrap {
+      width: 64px;
+      min-width: 64px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #081b1a, #052623);
+      padding: 8px;
+      font-weight: 700;
+      box-shadow: inset 0 -6px 12px rgba(0, 0, 0, 0.25)
+    }
+
+    .iconWrap .emoji {
+      font-size: 22px
+    }
+
+    .iconWrap .ascii {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1
+    }
+
+    .itemRow button {
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      border: 0;
+      padding: 9px 12px;
+      border-radius: 10px;
+      color: #04241c;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.08);
+      transition: transform .12s ease, box-shadow .12s ease;
+      letter-spacing: 0.2px
+    }
+
+    .itemRow button:active {
+      transform: translateY(2px) scale(.995)
+    }
+
+    .itemRow .cost {
+      font-weight: 700;
+      color: var(--muted);
+      transition: color .12s ease
+    }
+
+    .itemRow.affordable button {
+      animation: affordPulse 1.6s ease-in-out infinite
+    }
+
+    @keyframes affordPulse {
+      0% {
+        transform: scale(1)
+      }
+
+      50% {
+        transform: scale(1.03)
+      }
+
+      100% {
+        transform: scale(1)
+      }
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px
+    }
+
+    .btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .18s ease;
+      display: inline-flex;
+      gap: 8px;
+      align-items: center
+    }
+
+    .btn:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.09);
+      color: #fff
+    }
+
+    label {
+      font-size: 13px;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 6px
+    }
+
+    .settings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px
+    }
+
+    .small {
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    footer {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center
+    }
+
+    .helpModal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(90deg, rgba(2, 6, 23, 0.6), rgba(2, 6, 23, 0.45));
+      z-index: 60
+    }
+
+    .helpModal .box {
+      width: 720px;
+      max-width: 92%;
+      background: linear-gradient(180deg, #071426, #061224);
+      padding: 18px;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(2, 6, 23, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.03)
+    }
+
+    .kbd {
+      background: #061021;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      font-weight: 700
+    }
+
+    .muted-ghost {
+      color: rgba(255, 255, 255, 0.06);
+      font-size: 12px;
+      padding: 6px;
+      border-radius: 8px
+    }
+
+    .settings input,
+    select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.0));
+      color: var(--muted);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      outline: none;
+      transition: box-shadow .14s ease
+    }
+
+    .settings input:focus,
+    select:focus {
+      box-shadow: 0 10px 40px rgba(16, 185, 129, 0.06)
+    }
+
+    .stat .label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px
+    }
+
+    .glowPulse {
+      position: absolute;
+      pointer-events: none;
+      filter: blur(28px);
+      opacity: .28;
+      mix-blend-mode: screen;
+      transition: opacity .3s
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px
+    }
+
+    /* custom scrollbar for shop */
+    #shopList::-webkit-scrollbar {
+      width: 10px
+    }
+
+    #shopList::-webkit-scrollbar-track {
+      background: transparent
+    }
+
+    #shopList::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+      border-radius: 10px
+    }
+
+    /* responsive */
+    @media(max-width:980px) {
+      .wrap {
+        grid-template-columns: 1fr;
+        padding: 12px
+      }
+
+      canvas#clickCanvas {
+        width: 100%;
+        height: 340px
+      }
+
+      .card {
+        padding: 12px
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card" id="mainCard">
+      <header>
+        <div>
+          <h1><span class="header-emoji">✨</span> Click-Upgrades <span
+              style="font-size:12px;color:var(--muted);margin-left:6px">(polished — logic unchanged)</span></h1>
+          <div class="sub">Nebula canvas, glossy button (oval removed), animated UI. Space = click. B = buy next. H =
+            help.</div>
+        </div>
+      </header>
+
+      <div id="mainCanvasWrap" aria-hidden="false">
+        <div class="glowPulse" id="bigGlow"
+          style="width:580px;height:580px;border-radius:50%;background:radial-gradient(circle at 40% 30%, rgba(16,185,129,0.12), transparent 18%), radial-gradient(circle at 60% 70%, rgba(8,166,122,0.06), transparent 26%);left:calc(50% - 290px);top:-120px;position:absolute;z-index:1">
+        </div>
+
+        <canvas id="clickCanvas" width="1040" height="800" style="z-index:10;position:relative"></canvas>
+
+        <div id="stats" style="z-index:20;position:relative">
+          <div class="stat" id="statPoints">
+            <div class="label">🪙 Points</div>
+            <div id="points" class="big">0</div>
+          </div>
+          <div class="stat" id="statPower">
+            <div class="label">⚡ Click power</div>
+            <div id="power" class="big">1</div>
+          </div>
+          <div class="stat" id="statNext">
+            <div class="label">💰 Next price</div>
+            <div id="nextPrice" class="big">—</div>
+          </div>
+          <div class="stat" id="statClicks">
+            <div class="label">🔁 Clicks → next</div>
+            <div id="clicksNeeded" class="big">—</div>
+          </div>
+        </div>
+
+        <div class="controls" style="width:100%;justify-content:flex-start;margin-top:8px;z-index:20;position:relative">
+          <button class="btn" id="buyNextBtn">🛒 Buy next (B)</button>
+          <button class="btn" id="helpBtn">❔ Help (H)</button>
+          <button class="btn" id="saveBtn">💾 Save (S)</button>
+          <button class="btn" id="resetBtn">♻️ Reset (R)</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="rightCard">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-weight:700">Shop & Settings</div>
+          <div class="small" style="margin-top:6px">Pick a preset or set your target clicks-per-upgrade.</div>
+        </div>
+        <div style="font-size:12px;color:var(--muted)">✨ Items: emoji + ASCII pets</div>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Preset</label>
+        <select id="presetSelect" aria-label="Preset selector">
+          <option value="auto50">Stable target = 50 clicks (fast)</option>
+          <option value="auto375">Stable target = 375 clicks (original)</option>
+          <option value="originalExample">Original example: 100, 500, 1500, 3000, 6000, ...</option>
+          <option value="custom">Custom (use fields below)</option>
+        </select>
+      </div>
+
+      <div style="margin-top:12px" class="settings">
+        <div>
+          <label>Target clicks per upgrade</label>
+          <input id="targetClicks" type="number" min="1" value="50" aria-label="Target clicks">
+        </div>
+        <div>
+          <label>Base click power (before upgrades)</label>
+          <input id="basePower" type="number" min="1" value="1" aria-label="Base power">
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Number of item tiers to generate</label>
+        <input id="itemCount" type="number" min="3" max="40" value="15" aria-label="Item count">
+      </div>
+
+      <div style="margin-top:12px;display:flex;gap:8px">
+        <button class="btn" id="genBtn">⚙️ generate items</button>
+        <button class="btn" id="applyPresetBtn">🎛 apply preset</button>
+      </div>
+
+      <div class="shop" id="shopList" style="margin-top:14px;max-height:520px;overflow:auto;padding-right:6px">
+        <!-- shop rows will be created once and updated -->
+      </div>
+
+      <div class="hint">Tip: shop no longer reanimates on clicks. Buyable items gently pulse.</div>
+      <footer style="margin-top:10px">Keyboard: Space = click • B = buy next • 1..9 = buy item # • H = help • S = save •
+        R = reset</footer>
+    </div>
+  </div>
+
+  <!-- Help modal -->
+  <div class="helpModal" id="helpModal">
+    <div class="box" role="dialog" aria-modal="true">
+      <h3 style="margin-top:0">How the demo works</h3>
+      <p class="small">This is a canvas clicker with sequential upgrades. Visuals are updated but the game logic is
+        unchanged.</p>
+      <ul class="small">
+        <li>Click the big button (or press <span class="kbd">Space</span>) to gain points.</li>
+        <li>Your current <strong>click power</strong> sets how many points a single click gives.</li>
+        <li>Only the <em>next</em> item in the shop is purchasable — upgrades are linear.</li>
+        <li>Use the <em>Preset</em> dropdown to load the original sequence or a target-based sequence like 50 or 375
+          clicks-per-upgrade.</li>
+      </ul>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button class="btn" id="closeHelp">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* -------------------------
+       Core game state & helpers
+       (LOGIC REMAINS EXACTLY THE SAME)
+       ------------------------- */
+    const canvas = document.getElementById('clickCanvas');
+    const ctx = canvas.getContext('2d', { alpha: true });
+    const bigGlow = document.getElementById('bigGlow');
+
+    let state = {
+      points: 0,
+      currentTier: 0,
+      basePower: 1,
+      targetClicks: 50,
+      itemCount: 15,
+      prices: [],
+      autosaveKey: 'canvasClicker_v1'
+    };
+
+    /* UI nodes */
+    const pointsNode = document.getElementById('points');
+    const powerNode = document.getElementById('power');
+    const nextPriceNode = document.getElementById('nextPrice');
+    const clicksNeededNode = document.getElementById('clicksNeeded');
+    const shopList = document.getElementById('shopList');
+    const buyNextBtn = document.getElementById('buyNextBtn');
+    const helpBtn = document.getElementById('helpBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const presetSelect = document.getElementById('presetSelect');
+    const targetInput = document.getElementById('targetClicks');
+    const basePowerInput = document.getElementById('basePower');
+    const itemCountInput = document.getElementById('itemCount');
+    const genBtn = document.getElementById('genBtn');
+    const applyPresetBtn = document.getElementById('applyPresetBtn');
+    const helpModal = document.getElementById('helpModal');
+    const closeHelp = document.getElementById('closeHelp');
+
+    /* SHOP ROWS - created once, then updated */
+    let shopRowElems = []; // index -> {row, costElem, btn, emojiEl, asciiEl}
+
+    /* small helper: format large numbers nicely */
+    function fmt(n) {
+      if (n >= 1e12) return (n / 1e12).toFixed(2) + 'T';
+      if (n >= 1e9) return (n / 1e9).toFixed(2) + 'B';
+      if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M';
+      if (n >= 1e3) return (n / 1e3).toFixed(1) + 'k';
+      return Math.floor(n).toString();
+    }
+
+    /* compute click power for a given tier index (0 = base) */
+    function powerForTier(t) {
+      return state.basePower * Math.pow(2, t);
+    }
+
+    /* generate prices array in "targetClicks-per-upgrade" mode */
+    function generatePricesAuto() {
+      const n = state.itemCount;
+      const arr = [];
+      let currentPower = powerForTier(0);
+      for (let i = 1; i <= n; i++) {
+        const price = Math.max(1, Math.round(state.targetClicks * currentPower));
+        arr.push(price);
+        currentPower *= 2;
+      }
+      state.prices = arr;
+    }
+
+    /* optionally load the "original example" sequence */
+    function loadOriginalExample() {
+      const base = [100, 500, 1500, 3000, 6000];
+      const arr = base.slice();
+      while (arr.length < state.itemCount) {
+        arr.push(arr[arr.length - 1] * 2);
+      }
+      state.prices = arr.slice(0, state.itemCount);
+    }
+
+    /* Choose some emojis and ASCII faces for items (small set, cycles) */
+    const EMOJIS = ['🔧', '⚡', '⭐', '🛡️', '⚙️', '🪙', '🔮', '🧲', '💠', '🪓'];
+    const ASCII = ['ʕ•ᴥ•ʔ', '(•ᴗ•)', '(◕‿◕)', '(⌐■_■)', '(•̀ᴗ•́)و', '(✧ω✧)', '(°ᴥ°)', '(^^ゞ', '(¬_¬)', '(ღ˘⌣˘ღ)'];
+
+    /* ----- SHOP: create rows once ----- */
+    function createShopRows() {
+      shopList.innerHTML = '';
+      shopRowElems = [];
+      for (let i = 0; i < state.prices.length; i++) {
+        const tier = i + 1;
+        const price = state.prices[i];
+        const itemPower = powerForTier(tier);
+
+        const row = document.createElement('div');
+        row.className = 'itemRow';
+        row.setAttribute('data-tier', tier);
+
+        const emoji = EMOJIS[(i) % EMOJIS.length];
+        const ascii = ASCII[(i) % ASCII.length];
+
+        row.innerHTML = `
+      <div class="meta">
+        <div class="iconWrap">
+          <div class="emoji">${emoji}</div>
+          <div class="ascii">${ascii}</div>
+        </div>
+        <div>
+          <div style="font-weight:700">Tier ${tier} ${emoji}</div>
+          <div class="small">Power → ${fmt(itemPower)} / click</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div class="cost" style="text-align:right;color:var(--muted);font-weight:700">${fmt(price)}</div>
+        <button data-tier="${tier}">Buy</button>
+      </div>
+    `;
+
+        shopList.appendChild(row);
+        const costElem = row.querySelector('.cost');
+        const btn = row.querySelector('button');
+        btn.addEventListener('click', () => attemptBuy(tier));
+
+        if (tier !== state.currentTier + 1) {
+          btn.disabled = true;
+          btn.style.opacity = 0.46;
+          btn.style.cursor = 'not-allowed';
+        }
+
+        row.style.animationDelay = (i * 20) + 'ms';
+        shopRowElems.push({ row, costElem, btn });
+      }
+    }
+
+    /* ----- SHOP: update rows (called frequently, no DOM rebuild) ----- */
+    function updateShopRows() {
+      for (let i = 0; i < shopRowElems.length; i++) {
+        const tier = i + 1;
+        const price = state.prices[i];
+        const itemPower = powerForTier(tier);
+        const entry = shopRowElems[i];
+        if (!entry) continue;
+
+        entry.costElem.textContent = fmt(price);
+        const meta = entry.row.querySelector('.meta > div > div:nth-child(2) > .small');
+        if (meta) meta.textContent = `Power → ${fmt(itemPower)} / click`;
+
+        if (tier !== state.currentTier + 1) {
+          entry.btn.disabled = true;
+          entry.btn.style.opacity = 0.46;
+          entry.btn.style.cursor = 'not-allowed';
+          entry.row.classList.remove('affordable');
+        } else {
+          entry.btn.disabled = false;
+          entry.btn.style.opacity = 1;
+          entry.btn.style.cursor = 'pointer';
+          if (state.points >= price) {
+            entry.btn.style.filter = 'none';
+            entry.row.classList.add('affordable');
+          } else {
+            entry.btn.style.filter = 'grayscale(0.3)';
+            entry.row.classList.remove('affordable');
+          }
+        }
+      }
+    }
+
+    /* compute next price & clicks needed display */
+    function updateHUD() {
+      const tierToBuy = state.currentTier + 1;
+      const price = state.prices[tierToBuy - 1] ?? null;
+      const currentPower = powerForTier(state.currentTier);
+      targetDisplay.points = state.points;
+      targetDisplay.power = currentPower;
+      targetDisplay.nextPrice = price || 0;
+      buyNextBtn.textContent = price ? `🛒 Buy next (cost ${fmt(price)})` : 'No more items';
+      updateShopRows();
+    }
+
+    /* buy attempt (only buy next tier) */
+    function attemptBuy(tier) {
+      const expectedTier = state.currentTier + 1;
+      if (tier !== expectedTier) return;
+      const price = state.prices[tier - 1];
+      if (price == null) return;
+      if (state.points >= price) {
+        state.points -= price;
+        state.currentTier = tier;
+        spawnText(`+${fmt(powerForTier(state.currentTier))}`, { x: canvas.clientWidth / 2, y: canvas.clientHeight / 2 - 60, color: '#bdf' });
+        // small visual burst confetti (visual-only)
+        spawnParticles(canvas.clientWidth / 2, canvas.clientHeight / 2 - 20, 18, true);
+        saveGame();
+        updateHUD();
+        // pulse stats quickly
+        pulseStat('statPoints'); pulseStat('statPower'); pulseStat('statNext');
+      } else {
+        spawnText('Need more points', { x: canvas.clientWidth / 2, y: canvas.clientHeight / 2 - 60, color: '#f77' });
+      }
+    }
+
+    /* save/load/reset */
+    function saveGame() {
+      const s = {
+        points: state.points,
+        currentTier: state.currentTier,
+        basePower: state.basePower,
+        targetClicks: state.targetClicks,
+        itemCount: state.itemCount,
+        prices: state.prices
+      };
+      localStorage.setItem(state.autosaveKey, JSON.stringify(s));
+      spawnText('💾 Saved', { x: 120, y: 30, color: '#aef' });
+    }
+    function loadGame() {
+      const raw = localStorage.getItem(state.autosaveKey);
+      if (!raw) return false;
+      try {
+        const s = JSON.parse(raw);
+        state.points = s.points || 0;
+        state.currentTier = s.currentTier || 0;
+        state.basePower = s.basePower || state.basePower;
+        state.targetClicks = s.targetClicks || state.targetClicks;
+        state.itemCount = s.itemCount || state.itemCount;
+        state.prices = s.prices || state.prices;
+        targetInput.value = state.targetClicks;
+        basePowerInput.value = state.basePower;
+        itemCountInput.value = state.itemCount;
+        if (state.prices && state.prices.length) createShopRows();
+        updateHUD();
+        return true;
+      } catch (e) { return false; }
+    }
+    function resetGame() {
+      if (confirm('Reset progress and settings?')) {
+        state.points = 0;
+        state.currentTier = 0;
+        state.basePower = Number(basePowerInput.value) || 1;
+        state.targetClicks = Number(targetInput.value) || 50;
+        state.itemCount = Number(itemCountInput.value) || 15;
+        generatePricesAuto();
+        createShopRows();
+        saveGame();
+        updateHUD();
+      }
+    }
+
+    /* pulse stat element by id */
+    function pulseStat(id) {
+      try {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.remove('pulse');
+        // reflow to restart animation
+        void el.offsetWidth;
+        el.classList.add('pulse');
+      } catch (e) { }
+    }
+
+    /* -------------------------
+       Prettier Canvas Visuals (visual-only)
+       - Nebula layers (moving)
+       - Twinkling stars
+       - Orbs (slow drift)
+       - Glossy 3D button with sheen (OVAL REMOVED)
+       - Enhanced particles
+       ------------------------- */
+
+    const DPR = window.devicePixelRatio || 1;
+    function resizeCanvas() {
+      const w = canvas.clientWidth || 520;
+      const h = canvas.clientHeight || 400;
+      canvas.width = Math.floor(w * DPR);
+      canvas.height = Math.floor(h * DPR);
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    }
+    function setCanvasCssSize() {
+      // css size better matches layout when replaced
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width && rect.height) {
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+      }
+    }
+    resizeCanvas();
+    setCanvasCssSize();
+    window.addEventListener('resize', () => {
+      resizeCanvas(); initBackground();
+    });
+
+    /* background assets (procedural) */
+    let stars = [];
+    let orbs = [];
+    let nebulaLayers = [];
+    let tStart = performance.now();
+
+    /* initialize background elements */
+    function initBackground() {
+      stars = []; orbs = []; nebulaLayers = [];
+      const w = canvas.clientWidth || 520, h = canvas.clientHeight || 400;
+
+      const starCount = Math.round((w * h) / 6000);
+      for (let i = 0; i < starCount; i++) {
+        stars.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          size: (Math.random() * 1.6 + 0.6),
+          baseA: 0.06 + Math.random() * 0.25,
+          freq: 0.6 + Math.random() * 1.6,
+          phase: Math.random() * Math.PI * 2
+        });
+      }
+
+      const orbCount = Math.round(Math.max(3, w / 160));
+      for (let i = 0; i < orbCount; i++) {
+        orbs.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: 36 + Math.random() * 120,
+          vx: (Math.random() - 0.5) * 0.04,
+          vy: (Math.random() - 0.5) * 0.04,
+          hue: 140 + Math.random() * 80,
+          alpha: 0.06 + Math.random() * 0.08
+        });
+      }
+
+      for (let i = 0; i < 3; i++) {
+        nebulaLayers.push({
+          x: Math.random() * w * 0.6 - w * 0.2,
+          y: Math.random() * h * 0.6 - h * 0.2,
+          w: w * (0.9 + Math.random() * 0.6),
+          h: h * (0.6 + Math.random() * 0.8),
+          ang: Math.random() * Math.PI * 2,
+          speed: (Math.random() * 0.04 + 0.01) * (i + 1),
+          hue: 150 + Math.random() * 60,
+          alpha: 0.06 + Math.random() * 0.06 * (i + 1)
+        });
+      }
+    }
+    initBackground();
+
+    /* particles (on click) */
+    let particles = [];
+    let ripples = [];
+    let floatingTexts = [];
+    let pressAnim = { t: 0 };
+
+    /* spawn enhanced particles */
+    function spawnParticles(x, y, count = 26, confetti = false) {
+      for (let i = 0; i < count; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const speed = 1.6 + Math.random() * 3.2;
+        particles.push({
+          x, y,
+          vx: Math.cos(ang) * speed * (confetti ? (0.6 + Math.random() * 1.6) : 1),
+          vy: Math.sin(ang) * speed * 0.7 - 1.6,
+          life: 50 + Math.random() * 40,
+          age: 0,
+          size: 1 + Math.random() * 3,
+          hue: 120 + Math.random() * 90
+        });
+      }
+      if (confetti) {
+        for (let i = 0; i < 6; i++) {
+          particles.push({
+            x, y,
+            vx: (Math.random() - 0.5) * 6,
+            vy: -(2 + Math.random() * 5),
+            life: 70 + Math.random() * 50,
+            age: 0,
+            size: 3 + Math.random() * 5,
+            hue: 20 + Math.random() * 320
+          });
+        }
+      }
+    }
+
+    /* small floating text */
+    function spawnText(text, opts = {}) {
+      floatingTexts.push({
+        text,
+        x: opts.x || canvas.clientWidth / 2,
+        y: opts.y || canvas.clientHeight / 2,
+        a: 1,
+        vy: opts.vy || -0.8 - Math.random() * 0.6,
+        color: opts.color || '#bdf',
+        life: 70
+      });
+    }
+
+    /* ripples */
+    function spawnRipple(x, y) {
+      ripples.push({ x, y, r: 12, a: 0.92 });
+    }
+
+    /* animated display targets for HUD */
+    const targetDisplay = { points: 0, power: 1, nextPrice: 0 };
+    const smoothDisplay = { points: 0, power: 1, nextPrice: 0 };
+
+    /* helper lerp */
+    const lerp = (a, b, t) => a + (b - a) * t;
+
+    /* main draw loop with improved visuals */
+    let lastTs = 0;
+    function draw(ts) {
+      if (!lastTs) lastTs = ts;
+      const dt = Math.min(40, ts - lastTs);
+      lastTs = ts;
+      const now = (ts - tStart) / 1000;
+
+      // smooth HUD numbers
+      const smoothSpeed = 0.12;
+      smoothDisplay.points = lerp(smoothDisplay.points, targetDisplay.points, smoothSpeed);
+      smoothDisplay.power = lerp(smoothDisplay.power, targetDisplay.power, smoothSpeed);
+      smoothDisplay.nextPrice = lerp(smoothDisplay.nextPrice, targetDisplay.nextPrice, smoothSpeed);
+
+      pointsNode.textContent = fmt(Math.floor(smoothDisplay.points));
+      powerNode.textContent = fmt(Math.floor(smoothDisplay.power));
+      nextPriceNode.textContent = smoothDisplay.nextPrice ? fmt(Math.round(smoothDisplay.nextPrice)) : '—';
+      clicksNeededNode.textContent = (() => {
+        const price = state.prices[state.currentTier] ?? null;
+        const currentPower = powerForTier(state.currentTier);
+        return price ? Math.max(1, Math.ceil(price / Math.max(1, currentPower))) : '—';
+      })();
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const w = canvas.clientWidth || 520;
+      const h = canvas.clientHeight || 400;
+
+      // orbs
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      for (let i = 0; i < orbs.length; i++) {
+        const o = orbs[i];
+        o.x += o.vx * (dt / 16);
+        o.y += o.vy * (dt / 16);
+        if (o.x < -o.r) o.x = w + o.r;
+        if (o.x > w + o.r) o.x = -o.r;
+        if (o.y < -o.r) o.y = h + o.r;
+        if (o.y > h + o.r) o.y = -o.r;
+        const g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
+        g.addColorStop(0, `hsla(${o.hue}, 72%, 60%, ${o.alpha})`);
+        g.addColorStop(0.5, `hsla(${o.hue + 20}, 70%, 45%, ${o.alpha * 0.42})`);
+        g.addColorStop(1, `rgba(4,8,12,0)`);
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+
+      // nebula layers
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      for (let i = 0; i < nebulaLayers.length; i++) {
+        const nb = nebulaLayers[i];
+        nb.ang += nb.speed * 0.002 * (dt / 16);
+        const tx = nb.x + Math.sin(now * (0.18 + i * 0.07)) * 24;
+        const ty = nb.y + Math.cos(now * (0.15 + i * 0.05)) * 18;
+        ctx.translate(tx + nb.w / 2, ty + nb.h / 2);
+        ctx.rotate(nb.ang);
+        const g = ctx.createLinearGradient(-nb.w / 2, -nb.h / 2, nb.w / 2, nb.h / 2);
+        g.addColorStop(0, `hsla(${nb.hue - 30}, 70%, 40%, ${nb.alpha})`);
+        g.addColorStop(0.5, `hsla(${nb.hue}, 80%, 60%, ${nb.alpha * 0.82})`);
+        g.addColorStop(1, `hsla(${nb.hue + 40}, 60%, 35%, ${nb.alpha * 0.6})`);
+        ctx.fillStyle = g;
+        ctx.filter = 'blur(26px)';
+        ctx.fillRect(-nb.w / 2, -nb.h / 2, nb.w, nb.h);
+        ctx.filter = 'none';
+        ctx.rotate(-nb.ang);
+        ctx.translate(-(tx + nb.w / 2), -(ty + nb.h / 2));
+      }
+      ctx.restore();
+
+      // stars
+      ctx.save();
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        const a = s.baseA + Math.sin(now * s.freq + s.phase) * (s.baseA * 0.6);
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255,255,255,${Math.max(0, Math.min(1, a))})`;
+        ctx.fillRect(s.x, s.y, s.size, s.size);
+      }
+      ctx.restore();
+
+      // vignette
+      const vg = ctx.createLinearGradient(0, 0, 0, h);
+      vg.addColorStop(0, 'rgba(0,0,0,0.05)');
+      vg.addColorStop(0.5, 'rgba(0,0,0,0)');
+      vg.addColorStop(1, 'rgba(0,0,0,0.14)');
+      ctx.fillStyle = vg;
+      ctx.fillRect(0, 0, w, h);
+
+      // central button area (3D glossy) - note: OVAL HIGHLIGHT REMOVED
+      const cx = w / 2, cy = h / 2;
+      const radius = Math.min(w, h) / 4.6;
+
+      if (pressAnim.t > 0) pressAnim.t = Math.max(0, pressAnim.t - (dt / 300));
+      const pressScale = 1 + Math.sin(pressAnim.t * Math.PI) * 0.06;
+
+      // outer glow
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius + 28, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(6,160,120,' + (0.06 + Math.min(1, state.points / 12000) * 0.12) + ')';
+      ctx.fill();
+
+      // layered discs for depth
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(pressScale, pressScale);
+
+      // rim
+      ctx.beginPath();
+      const rimGrad = ctx.createLinearGradient(-radius, -radius, radius, radius);
+      rimGrad.addColorStop(0, '#0e3a34');
+      rimGrad.addColorStop(1, '#053c2f');
+      ctx.fillStyle = rimGrad;
+      ctx.arc(0, 0, radius + 8, 0, Math.PI * 2);
+      ctx.fill();
+
+      // face
+      ctx.beginPath();
+      const faceGrad = ctx.createRadialGradient(-radius * 0.25, -radius * 0.28, radius * 0.1, 0, 0, radius);
+      faceGrad.addColorStop(0, '#caffe0');
+      faceGrad.addColorStop(0.18, '#16e3a6');
+      faceGrad.addColorStop(0.32, '#10b981');
+      faceGrad.addColorStop(1, '#044a37');
+      ctx.fillStyle = faceGrad;
+      ctx.arc(0, 0, radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // MOVING SHEEN (keeps, but no inner oval)
+      // const sheenWidth = radius * 1.6;
+      // const sheenX = (Math.sin(now*0.78) * (radius*0.88));
+      // ctx.save();
+      // ctx.globalCompositeOperation = 'lighter';
+      // const sheenGrad = ctx.createLinearGradient(sheenX - sheenWidth, -radius*2, sheenX + sheenWidth, radius*2);
+      // sheenGrad.addColorStop(0, 'rgba(255,255,255,0)');
+      // sheenGrad.addColorStop(0.45, 'rgba(255,255,255,0.11)');
+      // sheenGrad.addColorStop(0.5, 'rgba(255,255,255,0.22)');
+      // sheenGrad.addColorStop(0.55, 'rgba(255,255,255,0.11)');
+      // sheenGrad.addColorStop(1, 'rgba(255,255,255,0)');
+      // ctx.fillStyle = sheenGrad;
+      // ctx.beginPath();
+      // ctx.ellipse(sheenX, -radius*0.12, sheenWidth, radius*0.9, -0.28, 0, Math.PI*2);
+      // ctx.fill();
+      // ctx.restore();
+
+      // progress ring (glow)
+      const price = state.prices[state.currentTier] ?? null;
+      if (price) {
+        const curPower = powerForTier(state.currentTier);
+        const progress = Math.min(1, state.points / price);
+        const startAngle = -Math.PI / 2;
+        const endAngle = startAngle + progress * Math.PI * 2;
+
+        ctx.beginPath();
+        ctx.lineWidth = 10;
+        ctx.strokeStyle = `rgba(16,185,129,${0.12 + 0.6 * progress})`;
+        ctx.shadowBlur = 18;
+        ctx.shadowColor = 'rgba(16,185,129,0.9)';
+        ctx.arc(0, 0, radius + 16, startAngle, endAngle);
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        ctx.beginPath();
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = `rgba(255,255,255,${0.06 + 0.5 * progress})`;
+        ctx.arc(0, 0, radius + 16, startAngle, endAngle);
+        ctx.stroke();
+
+        const ang = endAngle;
+        const ex = Math.cos(ang) * (radius + 16);
+        const ey = Math.sin(ang) * (radius + 16);
+        ctx.beginPath();
+        ctx.fillStyle = '#eafff0';
+        ctx.arc(ex, ey, 5 + progress * 5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // center label & power below
+      ctx.fillStyle = '#021919';
+      ctx.font = '700 28px Inter, system-ui';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('CLICK', 0, 0);
+
+      ctx.font = '600 14px Inter, system-ui';
+      ctx.fillStyle = '#eafdf0';
+      ctx.fillText(`${fmt(powerForTier(state.currentTier))}/click`, 0, radius + 32);
+
+      ctx.restore();
+
+      // particles update & render
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.age++;
+        if (p.age > p.life) { particles.splice(i, 1); continue; }
+        p.vx *= 0.992; p.vy += 0.06;
+        p.x += p.vx; p.y += p.vy;
+        const lifeRatio = 1 - p.age / p.life;
+        ctx.globalAlpha = Math.max(0, lifeRatio);
+        ctx.beginPath();
+        ctx.fillStyle = `hsl(${p.hue}, 78%, ${50 - lifeRatio * 10}%)`;
+        ctx.arc(p.x, p.y, p.size * (1 + (1 - lifeRatio)), 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.globalAlpha = Math.max(0, lifeRatio * 0.5);
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255,255,255,${lifeRatio * 0.06})`;
+        ctx.ellipse(p.x - p.vx * 1.5, p.y - p.vy * 1.5, p.size * 1.1, p.size * 0.6, Math.atan2(p.vy, p.vx), 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+
+      // ripples
+      for (let i = ripples.length - 1; i >= 0; i--) {
+        const r = ripples[i];
+        r.r += 3;
+        r.a -= 0.02;
+        if (r.a <= 0) { ripples.splice(i, 1); continue; }
+        ctx.beginPath();
+        ctx.lineWidth = 2 + (1 - r.a) * 4;
+        ctx.strokeStyle = `rgba(16,185,129,${r.a * 0.88})`;
+        ctx.setLineDash([6, 6]);
+        ctx.strokeRect(r.x - r.r, r.y - r.r, r.r * 2, r.r * 2);
+        ctx.setLineDash([]);
+      }
+
+      // floating texts
+      for (let i = floatingTexts.length - 1; i >= 0; i--) {
+        const t = floatingTexts[i];
+        t.y += t.vy;
+        t.a -= 0.02;
+        if (t.a <= 0) { floatingTexts.splice(i, 1); continue; }
+        ctx.globalAlpha = Math.max(0, t.a);
+        ctx.font = '700 16px Inter, system-ui';
+        ctx.fillStyle = t.color;
+        ctx.fillText(t.text, t.x, t.y);
+        ctx.globalAlpha = 1;
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    /* pointer handling (unchanged) */
+    canvas.addEventListener('pointerdown', (ev) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = (ev.clientX - rect.left);
+      const y = (ev.clientY - rect.top);
+      const cx = canvas.clientWidth / 2, cy = canvas.clientHeight / 2, radius = Math.min(canvas.clientWidth, canvas.clientHeight) / 4.6;
+      const dx = x - cx, dy = y - cy;
+      if (Math.hypot(dx, dy) <= radius) {
+        doClick();
+        spawnRipple(x, y);
+        spawnParticles(x, y, 28);
+        pressAnim.t = 1.0;
+      }
+    });
+
+    /* perform a click (logic unchanged) */
+    function doClick() {
+      const add = powerForTier(state.currentTier);
+      state.points += add;
+      spawnText('+' + fmt(add), { x: canvas.clientWidth / 2, y: canvas.clientHeight / 2 - 60, color: '#bdf' });
+      updateHUD();
+      // small pulse on points stat
+      pulseStat('statPoints');
+    }
+
+    /* keyboard shortcuts (unchanged) */
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') { e.preventDefault(); doClick(); }
+      if (e.key === 'b' || e.key === 'B') { attemptBuy(state.currentTier + 1); }
+      if (e.key === 'h' || e.key === 'H') { showHelp(); }
+      if (e.key === 's' || e.key === 'S') { saveGame(); }
+      if (e.key === 'r' || e.key === 'R') { resetGame(); }
+      if (/^[1-9]$/.test(e.key)) { const t = Number(e.key); attemptBuy(t); }
+    });
+
+    /* wire up buttons (unchanged) */
+    buyNextBtn.addEventListener('click', () => attemptBuy(state.currentTier + 1));
+    helpBtn.addEventListener('click', showHelp);
+    closeHelp.addEventListener('click', () => helpModal.style.display = 'none');
+    saveBtn.addEventListener('click', saveGame);
+    resetBtn.addEventListener('click', resetGame);
+
+    genBtn.addEventListener('click', () => {
+      state.basePower = Number(basePowerInput.value) || 1;
+      state.targetClicks = Number(targetInput.value) || 50;
+      state.itemCount = Math.max(3, Math.min(40, Number(itemCountInput.value) || 15));
+      generatePricesAuto();
+      createShopRows();
+      updateHUD();
+    });
+    applyPresetBtn.addEventListener('click', applyPreset);
+    presetSelect.addEventListener('change', applyPreset);
+    function applyPreset() {
+      const val = presetSelect.value;
+      if (val === 'auto50') {
+        targetInput.value = 50;
+        basePowerInput.value = 1;
+        state.targetClicks = 50; state.basePower = 1;
+        state.itemCount = Number(itemCountInput.value) || 15;
+        generatePricesAuto();
+      } else if (val === 'auto375') {
+        targetInput.value = 375;
+        basePowerInput.value = 1;
+        state.targetClicks = 375; state.basePower = 1;
+        generatePricesAuto();
+      } else if (val === 'originalExample') {
+        loadOriginalExample();
+      } else if (val === 'custom') {
+        state.targetClicks = Number(targetInput.value) || state.targetClicks;
+        state.basePower = Number(basePowerInput.value) || state.basePower;
+        generatePricesAuto();
+      }
+      createShopRows();
+      updateHUD();
+    }
+
+    function showHelp() { helpModal.style.display = 'flex'; }
+
+    /* initialize */
+    function init() {
+      // set CSS size to match layout, then scale canvas for DPR
+      setCanvasCssSize();
+      resizeCanvas();
+      state.basePower = Number(basePowerInput.value) || 1;
+      state.targetClicks = Number(targetInput.value) || 50;
+      state.itemCount = Number(itemCountInput.value) || 15;
+      generatePricesAuto();
+      createShopRows();
+      loadGame();
+      updateHUD();
+      requestAnimationFrame(draw);
+    }
+    init();
+
+    /* auto-save unchanged */
+    setInterval(() => { saveGame(); }, 8000);
+  </script>
+</body>
+
+</html>
